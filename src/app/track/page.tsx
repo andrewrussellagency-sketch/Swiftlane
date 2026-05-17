@@ -209,12 +209,6 @@ function TrackingContent() {
             </button>
           </form>
 
-          <p style={{ fontSize: '13px', color: 'rgba(187,247,208,0.5)' }}>
-            Demo:{' '}
-            <button onClick={() => { setTrackingNumber('SWL-2024-001'); handleSearch('SWL-2024-001') }} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '13px', fontWeight: 700, textDecoration: 'underline' }}>
-              SWL-2024-001
-            </button>
-          </p>
 
           <div className="mini-cards" style={{ marginTop: '64px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
             {[
