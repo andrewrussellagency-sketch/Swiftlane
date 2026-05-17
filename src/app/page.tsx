@@ -48,7 +48,7 @@ export default function HomePage() {
       {/* CSS for responsive layouts */}
       <style>{`
         .hero-form { display: flex; gap: 12px; }
-        .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; align-items: center; }
         .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; max-width: 680px; margin: 0 auto; }
         .services-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
         .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; }
@@ -70,8 +70,8 @@ export default function HomePage() {
 
         @media (max-width: 600px) {
           .hero-form { flex-direction: column !important; }
-          .hero-buttons { flex-direction: column !important; align-items: stretch !important; }
-          .hero-buttons a { text-align: center !important; justify-content: center !important; }
+          .hero-buttons { flex-direction: column !important; align-items: stretch !important; width: 100% !important; max-width: 360px !important; margin-left: auto !important; margin-right: auto !important; }
+          .hero-buttons a { text-align: center !important; justify-content: center !important; width: 100% !important; box-sizing: border-box !important; }
           .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
           .services-grid { grid-template-columns: 1fr !important; }
           .features-grid { grid-template-columns: 1fr !important; }

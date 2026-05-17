@@ -35,7 +35,6 @@ export default function ContactPage() {
     }
     setLoading(true)
     setError('')
-    // Simulate sending (you can connect to email service later)
     await new Promise((r) => setTimeout(r, 1500))
     setSuccess(true)
     setLoading(false)
@@ -66,6 +65,7 @@ export default function ContactPage() {
         .input-field:focus { border-color: #16a34a !important; box-shadow: 0 0 0 3px rgba(22,163,74,0.1) !important; }
         .contact-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 32px; }
         .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         @keyframes floatOrb1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-20px,-25px); } }
         @keyframes floatOrb2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,-15px); } }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -76,8 +76,9 @@ export default function ContactPage() {
         }
         @media (max-width: 600px) {
           .hero-pad { padding: 100px 20px 40px !important; }
-          .section-pad { padding: 20px !important; }
           .hero-title { font-size: 36px !important; }
+          .quick-cards { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .form-two-col { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -102,20 +103,20 @@ export default function ContactPage() {
             Have a question or need help with your shipment? Our team is available 24/7 and ready to assist you.
           </p>
 
-          {/* Quick contact cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
+          {/* Quick contact cards — fixed for mobile */}
+          <div className="quick-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
             {[
               { icon: Phone, title: 'Call Us', value: '+234 800 000 0000', sub: 'Mon-Sun, 24/7' },
               { icon: Mail, title: 'Email Us', value: 'info@swiftlanelogs.com', sub: 'Reply within 2 hours' },
               { icon: MessageSquare, title: 'Live Chat', value: 'Chat with us', sub: 'Available now' },
             ].map((item) => (
-              <div key={item.title} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '16px', padding: '20px 14px', backdropFilter: 'blur(8px)' }}>
-                <div style={{ background: 'rgba(22,163,74,0.2)', width: '40px', height: '40px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px' }}>
+              <div key={item.title} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '16px', padding: '20px 16px', backdropFilter: 'blur(8px)' }}>
+                <div style={{ background: 'rgba(22,163,74,0.25)', width: '44px', height: '44px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
                   <item.icon size={20} color="#4ade80" />
                 </div>
-                <p style={{ fontSize: '12px', fontWeight: 700, color: 'white', margin: '0 0 3px 0' }}>{item.title}</p>
-                <p style={{ fontSize: '11px', color: '#4ade80', margin: '0 0 2px 0', fontWeight: 600 }}>{item.value}</p>
-                <p style={{ fontSize: '10px', color: 'rgba(187,247,208,0.6)', margin: 0 }}>{item.sub}</p>
+                <p style={{ fontSize: '13px', fontWeight: 700, color: 'white', margin: '0 0 6px 0' }}>{item.title}</p>
+                <p style={{ fontSize: '12px', color: '#4ade80', margin: '0 0 4px 0', fontWeight: 600, wordBreak: 'break-word' }}>{item.value}</p>
+                <p style={{ fontSize: '11px', color: 'rgba(187,247,208,0.6)', margin: 0 }}>{item.sub}</p>
               </div>
             ))}
           </div>
@@ -124,13 +125,10 @@ export default function ContactPage() {
 
       {/* MAIN CONTENT */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 20px 80px' }}>
-
         <div className="contact-grid">
 
-          {/* LEFT — Contact Info */}
+          {/* LEFT */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-
-            {/* Office Info */}
             <div style={{ background: 'white', borderRadius: '20px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
               <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: '0 0 20px 0' }}>Our Office</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -155,7 +153,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Support Card */}
             <div style={{ background: 'linear-gradient(135deg,#052e16,#14532d)', borderRadius: '20px', padding: '28px', color: 'white' }}>
               <div style={{ background: 'rgba(22,163,74,0.2)', width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
                 <Headphones size={24} color="#4ade80" />
@@ -165,25 +162,22 @@ export default function ContactPage() {
                 Our dedicated support team is always available to help you with tracking, bookings, or any other questions.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 16px' }}>
-                  <div style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%' }} />
-                  <span style={{ fontSize: '13px', color: 'white', fontWeight: 500 }}>Average response time: 5 minutes</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 16px' }}>
-                  <div style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%' }} />
-                  <span style={{ fontSize: '13px', color: 'white', fontWeight: 500 }}>98% customer satisfaction rate</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 16px' }}>
-                  <div style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%' }} />
-                  <span style={{ fontSize: '13px', color: 'white', fontWeight: 500 }}>Available in English & French</span>
-                </div>
+                {[
+                  'Average response time: 5 minutes',
+                  '98% customer satisfaction rate',
+                  'Available in English and French',
+                ].map((text) => (
+                  <div key={text} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px 16px' }}>
+                    <div style={{ width: '8px', height: '8px', background: '#4ade80', borderRadius: '50%', flexShrink: 0 }} />
+                    <span style={{ fontSize: '13px', color: 'white', fontWeight: 500 }}>{text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* RIGHT — Contact Form */}
+          {/* RIGHT — Form */}
           <div style={{ background: 'white', borderRadius: '20px', padding: '36px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
-
             {success ? (
               <div style={{ textAlign: 'center', padding: '40px 20px' }}>
                 <div style={{ width: '72px', height: '72px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', animation: 'success-pop 0.5s ease' }}>
@@ -193,10 +187,7 @@ export default function ContactPage() {
                 <p style={{ fontSize: '15px', color: '#64748b', margin: '0 0 28px 0', lineHeight: 1.7 }}>
                   Thank you for reaching out. Our team will get back to you within 2 hours.
                 </p>
-                <button
-                  onClick={() => setSuccess(false)}
-                  style={{ background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px 28px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '14px' }}
-                >
+                <button onClick={() => setSuccess(false)} style={{ background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px 28px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '14px' }}>
                   Send Another Message
                 </button>
               </div>
@@ -213,7 +204,7 @@ export default function ContactPage() {
                 </div>
 
                 <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div className="form-two-col">
                     <div>
                       <label style={labelStyle}>Full Name *</label>
                       <input className="input-field" style={inputStyle} placeholder="John Smith" value={form.name} onChange={(e) => update('name', e.target.value)} />
@@ -223,20 +214,13 @@ export default function ContactPage() {
                       <input className="input-field" style={inputStyle} placeholder="+234 800 000 0000" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
                     </div>
                   </div>
-
                   <div>
                     <label style={labelStyle}>Email Address *</label>
                     <input className="input-field" style={inputStyle} type="email" placeholder="john@example.com" value={form.email} onChange={(e) => update('email', e.target.value)} />
                   </div>
-
                   <div>
                     <label style={labelStyle}>Subject</label>
-                    <select
-                      className="input-field"
-                      style={{ ...inputStyle, cursor: 'pointer' }}
-                      value={form.subject}
-                      onChange={(e) => update('subject', e.target.value)}
-                    >
+                    <select className="input-field" style={{ ...inputStyle, cursor: 'pointer' }} value={form.subject} onChange={(e) => update('subject', e.target.value)}>
                       <option value="">Select a subject...</option>
                       <option value="tracking">Shipment Tracking Issue</option>
                       <option value="booking">Booking Help</option>
@@ -246,27 +230,16 @@ export default function ContactPage() {
                       <option value="other">Other</option>
                     </select>
                   </div>
-
                   <div>
                     <label style={labelStyle}>Message *</label>
-                    <textarea
-                      className="input-field"
-                      style={{ ...inputStyle, minHeight: '140px', resize: 'vertical' as const, lineHeight: 1.6 }}
-                      placeholder="Tell us how we can help you..."
-                      value={form.message}
-                      onChange={(e) => update('message', e.target.value)}
-                    />
+                    <textarea className="input-field" style={{ ...inputStyle, minHeight: '140px', resize: 'vertical' as const, lineHeight: 1.6 }} placeholder="Tell us how we can help you..." value={form.message} onChange={(e) => update('message', e.target.value)} />
                   </div>
 
                   {error && (
                     <p style={{ color: '#dc2626', fontSize: '13px', background: '#fee2e2', padding: '12px 16px', borderRadius: '10px', margin: 0 }}>{error}</p>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    style={{ background: loading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '16px', borderRadius: '12px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: loading ? 'none' : '0 4px 16px rgba(22,163,74,0.3)' }}
-                  >
+                  <button type="submit" disabled={loading} style={{ background: loading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '16px', borderRadius: '12px', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: loading ? 'none' : '0 4px 16px rgba(22,163,74,0.3)' }}>
                     {loading ? (
                       <><div style={{ width: '18px', height: '18px', border: '3px solid rgba(255,255,255,0.3)', borderTop: '3px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> Sending...</>
                     ) : (
@@ -279,32 +252,20 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* FAQ SECTION */}
+        {/* FAQ */}
         <div style={{ marginTop: '60px' }}>
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <p style={{ color: '#16a34a', fontWeight: 700, fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.14em', margin: '0 0 10px 0' }}>FAQ</p>
             <h2 style={{ fontSize: 'clamp(26px,4vw,40px)', fontWeight: 800, color: '#0f172a', margin: '0 0 12px 0' }}>Frequently Asked Questions</h2>
-            <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '460px', margin: '0 auto' }}>
-              Find quick answers to the most common questions about our services.
-            </p>
+            <p style={{ fontSize: '15px', color: '#64748b', maxWidth: '460px', margin: '0 auto' }}>Find quick answers to common questions about our services.</p>
           </div>
-
           <div className="faq-grid">
             {faqs.map((faq, i) => (
-              <div
-                key={i}
-                style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  style={{ width: '100%', padding: '20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', textAlign: 'left' }}
-                >
+              <div key={i} style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <button onClick={() => setOpenFaq(openFaq === i ? null : i)} style={{ width: '100%', padding: '20px', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', textAlign: 'left' }}>
                   <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', lineHeight: 1.4 }}>{faq.q}</span>
                   <div style={{ flexShrink: 0, background: openFaq === i ? '#16a34a' : '#f1f5f9', borderRadius: '50%', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s' }}>
-                    {openFaq === i
-                      ? <ChevronUp size={16} color="white" />
-                      : <ChevronDown size={16} color="#64748b" />
-                    }
+                    {openFaq === i ? <ChevronUp size={16} color="white" /> : <ChevronDown size={16} color="#64748b" />}
                   </div>
                 </button>
                 {openFaq === i && (

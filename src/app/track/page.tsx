@@ -117,12 +117,11 @@ function TrackingContent() {
     }
   }
 
+  // Only show location for Order Placed and Delivered
+  const showLocation = (status: string) => status === 'pending' || status === 'delivered'
+
   const formatDate = (dateStr: string) => new Date(dateStr).toLocaleDateString('en-US', {
     weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
-  })
-
-  const formatDateTime = (dateStr: string) => new Date(dateStr).toLocaleString('en-US', {
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   })
 
   const currentStepIndex = shipment ? getStepIndex(shipment.status) : -1
@@ -165,6 +164,7 @@ function TrackingContent() {
           .hero-title { font-size: 36px !important; }
           .info-cols { grid-template-columns: 1fr !important; }
           .pkg-grid { grid-template-columns: 1fr !important; }
+          .mini-cards { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -179,7 +179,6 @@ function TrackingContent() {
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(74,222,128,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,0.04) 1px,transparent 1px)', backgroundSize: '56px 56px', pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: '680px', margin: '0 auto', paddingLeft: '24px', paddingRight: '24px', textAlign: 'center', position: 'relative', zIndex: 1, paddingTop: '120px', paddingBottom: '80px' }}>
-
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(22,163,74,0.15)', border: '1px solid rgba(74,222,128,0.3)', color: '#86efac', fontSize: '13px', fontWeight: 500, padding: '7px 18px', borderRadius: '999px', marginBottom: '28px' }}>
             <span style={{ width: '7px', height: '7px', background: '#4ade80', borderRadius: '50%', display: 'inline-block' }} />
             Real-time shipment tracking
@@ -217,7 +216,7 @@ function TrackingContent() {
             </button>
           </p>
 
-          <div style={{ marginTop: '64px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
+          <div className="mini-cards" style={{ marginTop: '64px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
             {[
               { icon: Search, title: 'Enter Number', desc: 'Type your tracking number above' },
               { icon: Globe, title: 'Live Status', desc: 'See real-time shipment updates' },
@@ -244,25 +243,18 @@ function TrackingContent() {
           onClick={(e) => { if (e.target === e.currentTarget) closeModal() }}
           style={{
             position: 'fixed', inset: 0, zIndex: 200,
-            background: 'rgba(0,0,0,0.8)',
-            backdropFilter: 'blur(6px)',
+            background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '20px',
-            animation: 'modal-in 0.25s ease',
+            padding: '20px', animation: 'modal-in 0.25s ease',
           }}
         >
-          <div
-            className="modal-inner modal-scroll"
-            style={{
-              background: 'white', borderRadius: '24px',
-              width: '100%', maxWidth: '820px',
-              maxHeight: '88vh', overflowY: 'auto',
-              position: 'relative',
-              animation: 'slide-up 0.3s ease',
-              boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
-            }}
-          >
-            {/* Close */}
+          <div className="modal-inner modal-scroll" style={{
+            background: 'white', borderRadius: '24px',
+            width: '100%', maxWidth: '820px',
+            maxHeight: '88vh', overflowY: 'auto',
+            position: 'relative', animation: 'slide-up 0.3s ease',
+            boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
+          }}>
             <button onClick={closeModal} style={{ position: 'absolute', top: '20px', right: '20px', background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10 }}>
               <X size={18} color="#64748b" />
             </button>
@@ -285,12 +277,8 @@ function TrackingContent() {
                 <h3 style={{ fontSize: '22px', fontWeight: 700, color: '#0f172a', margin: '0 0 10px 0' }}>Shipment Not Found</h3>
                 <p style={{ color: '#64748b', fontSize: '15px', margin: '0 0 32px 0', lineHeight: 1.7 }}>{error}</p>
                 <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <button onClick={closeModal} style={{ background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px 24px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px' }}>
-                    Try Again
-                  </button>
-                  <Link href="/contact" style={{ background: '#f8fafc', color: '#374151', fontWeight: 600, padding: '12px 24px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', border: '1px solid #e2e8f0' }}>
-                    Contact Support
-                  </Link>
+                  <button onClick={closeModal} style={{ background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px 24px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px' }}>Try Again</button>
+                  <Link href="/contact" style={{ background: '#f8fafc', color: '#374151', fontWeight: 600, padding: '12px 24px', borderRadius: '10px', textDecoration: 'none', fontSize: '14px', border: '1px solid #e2e8f0' }}>Contact Support</Link>
                 </div>
               </div>
             )}
@@ -319,18 +307,10 @@ function TrackingContent() {
                 {/* Progress Steps */}
                 <div style={{ background: '#f8fafc', borderRadius: '20px', padding: '28px 20px', marginBottom: '24px', border: '1px solid #f1f5f9' }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative' }}>
-                    {/* Line */}
                     <div style={{ position: 'absolute', top: '19px', left: '5%', right: '5%', height: '3px', background: '#e2e8f0', zIndex: 0 }}>
                       <div style={{
-                        height: '100%',
-                        background: 'linear-gradient(90deg,#16a34a,#4ade80)',
-                        borderRadius: '2px',
-                        transition: 'width 0.6s ease',
-                        width: currentStepIndex <= 0 ? '0%'
-                          : currentStepIndex === 1 ? '25%'
-                          : currentStepIndex === 2 ? '50%'
-                          : currentStepIndex === 3 ? '75%'
-                          : '100%',
+                        height: '100%', background: 'linear-gradient(90deg,#16a34a,#4ade80)', borderRadius: '2px', transition: 'width 0.6s ease',
+                        width: currentStepIndex <= 0 ? '0%' : currentStepIndex === 1 ? '25%' : currentStepIndex === 2 ? '50%' : currentStepIndex === 3 ? '75%' : '100%',
                       }} />
                     </div>
 
@@ -379,21 +359,23 @@ function TrackingContent() {
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       {history.map((h, i) => {
                         const c = getStatusColor(h.status)
+                        const showLoc = showLocation(h.status)
                         return (
                           <div key={h.id} style={{ display: 'flex', gap: '12px', paddingBottom: i < history.length - 1 ? '16px' : '0', position: 'relative' }}>
                             {i < history.length - 1 && <div style={{ position: 'absolute', left: '10px', top: '22px', bottom: 0, width: '2px', background: '#e2e8f0' }} />}
-                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: i === 0 ? '#16a34a' : '#e2e8f0', flexShrink: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              {i === 0 && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
+                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: i === history.length - 1 ? '#16a34a' : '#e2e8f0', flexShrink: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              {i === history.length - 1 && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
                             </div>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: 'inline-flex', background: c.bg, color: c.color, fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginBottom: '4px' }}>
                                 {getStatusLabel(h.status)}
                               </div>
                               <p style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a', margin: '0 0 3px 0' }}>{h.description}</p>
-                              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '3px' }}><MapPin size={10} /> {h.location}</span>
-                                <span style={{ fontSize: '11px', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '3px' }}><Clock size={10} /> {formatDateTime(h.timestamp)}</span>
-                              </div>
+                              {showLoc && h.location && (
+                                <span style={{ fontSize: '11px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                  <MapPin size={10} /> {h.location}
+                                </span>
+                              )}
                             </div>
                           </div>
                         )
