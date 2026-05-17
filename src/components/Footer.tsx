@@ -12,7 +12,7 @@ export default function Footer() {
     { name: 'Book Shipment', href: '/book' },
     { name: 'Contact Us', href: '/contact' },
     { name: 'About Us', href: '/about' },
-    { name: 'Admin Panel', href: '/admin' },
+    
   ]
 
   return (
