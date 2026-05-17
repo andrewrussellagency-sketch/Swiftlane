@@ -193,8 +193,8 @@ function TrackingContent() {
             Enter your tracking number to get real-time updates on your package location and estimated delivery.
           </p>
 
-          <form onSubmit={submit} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '20px' }}>
-            <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+          <form onSubmit={submit} style={{ display: 'flex', gap: '10px', alignItems: 'stretch', marginBottom: '20px' }}>
+            <div style={{ position: 'relative', flex: 1 }}>
               <Search size={18} color="rgba(134,239,172,0.7)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
               <input
                 type="text"
@@ -204,8 +204,8 @@ function TrackingContent() {
                 style={{ width: '100%', boxSizing: 'border-box', paddingLeft: '50px', paddingRight: '16px', paddingTop: '17px', paddingBottom: '17px', background: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '14px', color: 'white', fontSize: '15px', outline: 'none', backdropFilter: 'blur(10px)' }}
               />
             </div>
-            <button type="submit" style={{ background: 'linear-gradient(135deg,#dc2626,#b91c1c)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '17px 28px', borderRadius: '14px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap', boxShadow: '0 4px 24px rgba(220,38,38,0.4)' }}>
-              <Search size={16} /> Track Now
+            <button type="submit" style={{ background: 'linear-gradient(135deg,#dc2626,#b91c1c)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '17px 20px', borderRadius: '14px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', boxShadow: '0 4px 24px rgba(220,38,38,0.4)', flexShrink: 0 }}>
+              Track Now
             </button>
           </form>
 
@@ -360,11 +360,12 @@ function TrackingContent() {
                       {history.map((h, i) => {
                         const c = getStatusColor(h.status)
                         const showLoc = showLocation(h.status)
+                        const isLatest = i === history.length - 1
                         return (
                           <div key={h.id} style={{ display: 'flex', gap: '12px', paddingBottom: i < history.length - 1 ? '16px' : '0', position: 'relative' }}>
                             {i < history.length - 1 && <div style={{ position: 'absolute', left: '10px', top: '22px', bottom: 0, width: '2px', background: '#e2e8f0' }} />}
-                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: i === history.length - 1 ? '#16a34a' : '#e2e8f0', flexShrink: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              {i === history.length - 1 && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
+                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: isLatest ? '#16a34a' : '#e2e8f0', flexShrink: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              {isLatest && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
                             </div>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: 'inline-flex', background: c.bg, color: c.color, fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginBottom: '4px' }}>

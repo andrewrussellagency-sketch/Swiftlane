@@ -173,7 +173,7 @@ export default function HomePage() {
           </div>
 
           <div style={{ ...fadeUp(450), maxWidth: '540px', margin: '0 auto 24px' }}>
-            <form onSubmit={submit} className="hero-form">
+            <form onSubmit={submit} style={{ display: 'flex', gap: '10px', alignItems: 'stretch' }}>
               <div style={{ position: 'relative', flex: 1 }}>
                 <Search size={17} color="rgba(134,239,172,0.7)" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
                 <input
@@ -184,18 +184,15 @@ export default function HomePage() {
                   style={{ width: '100%', boxSizing: 'border-box', paddingLeft: '44px', paddingRight: '16px', paddingTop: '15px', paddingBottom: '15px', background: 'rgba(255,255,255,0.1)', border: '1.5px solid rgba(255,255,255,0.2)', borderRadius: '12px', color: 'white', fontSize: '14px', outline: 'none', backdropFilter: 'blur(8px)' }}
                 />
               </div>
-              <button type="submit" style={{ background: 'linear-gradient(135deg,#dc2626,#b91c1c)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '15px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '7px', whiteSpace: 'nowrap', boxShadow: '0 4px 20px rgba(220,38,38,0.4)' }}>
-                Track Now <ArrowRight size={16} />
+              <button type="submit" style={{ background: 'linear-gradient(135deg,#dc2626,#b91c1c)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '15px 20px', borderRadius: '12px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap', boxShadow: '0 4px 20px rgba(220,38,38,0.4)', flexShrink: 0 }}>
+                Track Now <ArrowRight size={15} />
               </button>
             </form>
           </div>
 
-          <div style={{ ...fadeUp(600) }} className="hero-buttons" >
-            <Link href="/book" className="cta-btn-primary" style={{ background: 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '15px 32px', borderRadius: '12px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px', boxShadow: '0 4px 20px rgba(22,163,74,0.4)' }}>
+          <div style={{ ...fadeUp(600), textAlign: 'center' }}>
+            <Link href="/book" className="cta-btn-primary" style={{ background: 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '15px 40px', borderRadius: '12px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: '0 4px 20px rgba(22,163,74,0.4)' }}>
               Book a Shipment <ArrowRight size={18} />
-            </Link>
-            <Link href="#services" style={{ border: '2px solid rgba(255,255,255,0.25)', color: 'white', fontWeight: 600, fontSize: '15px', padding: '15px 32px', borderRadius: '12px', textDecoration: 'none', background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(8px)' }}>
-              View Services
             </Link>
           </div>
 
