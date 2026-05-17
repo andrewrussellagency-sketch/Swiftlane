@@ -133,10 +133,9 @@ function TrackingContent() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse-ring {
-          0% { transform: scale(1); opacity: 0.8; }
-          70% { transform: scale(1.7); opacity: 0; }
-          100% { transform: scale(1.7); opacity: 0; }
+        @keyframes soft-pulse {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 0; transform: scale(1.5); }
         }
         @keyframes pulse-dot {
           0%, 100% { transform: scale(1); }
@@ -367,12 +366,15 @@ function TrackingContent() {
                             <div style={{ position: 'relative', flexShrink: 0, zIndex: 1 }}>
                               {isLatest && (
                                 <>
-                                  <div style={{ position: 'absolute', inset: '-5px', borderRadius: '50%', background: 'rgba(22,163,74,0.2)', animation: 'pulse-ring 1.8s ease-out infinite' }} />
-                                  <div style={{ position: 'absolute', inset: '-2px', borderRadius: '50%', background: 'rgba(22,163,74,0.15)', animation: 'pulse-ring 1.8s ease-out 0.5s infinite' }} />
+                                  <div style={{ position: 'absolute', inset: '-8px', borderRadius: '50%', background: 'rgba(22,163,74,0.15)', animation: 'soft-pulse 2.5s ease-in-out infinite' }} />
+                                  <div style={{ position: 'absolute', inset: '-4px', borderRadius: '50%', background: 'rgba(22,163,74,0.2)', animation: 'soft-pulse 2.5s ease-in-out 0.8s infinite' }} />
                                 </>
                               )}
-                              <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                {isLatest && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
+                              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isLatest ? '0 0 0 3px rgba(22,163,74,0.3)' : 'none' }}>
+                                {isLatest
+                                  ? <div style={{ width: '7px', height: '7px', background: 'white', borderRadius: '50%' }} />
+                                  : <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                }
                               </div>
                             </div>
                             <div style={{ flex: 1 }}>
