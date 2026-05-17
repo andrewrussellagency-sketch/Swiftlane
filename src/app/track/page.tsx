@@ -364,13 +364,7 @@ function TrackingContent() {
                           <div key={h.id} style={{ display: 'flex', gap: '12px', paddingBottom: i < history.length - 1 ? '16px' : '0', position: 'relative' }}>
                             {i < history.length - 1 && <div style={{ position: 'absolute', left: '10px', top: '22px', bottom: 0, width: '2px', background: '#e2e8f0' }} />}
                             <div style={{ position: 'relative', flexShrink: 0, zIndex: 1 }}>
-                              {isLatest && (
-                                <>
-                                  <div style={{ position: 'absolute', inset: '-8px', borderRadius: '50%', background: 'rgba(22,163,74,0.15)', animation: 'soft-pulse 2.5s ease-in-out infinite' }} />
-                                  <div style={{ position: 'absolute', inset: '-4px', borderRadius: '50%', background: 'rgba(22,163,74,0.2)', animation: 'soft-pulse 2.5s ease-in-out 0.8s infinite' }} />
-                                </>
-                              )}
-                              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: isLatest ? '0 0 0 3px rgba(22,163,74,0.3)' : 'none' }}>
+                              <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 {isLatest
                                   ? <div style={{ width: '7px', height: '7px', background: 'white', borderRadius: '50%' }} />
                                   : <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
