@@ -209,6 +209,12 @@ function TrackingContent() {
             </button>
           </form>
 
+          <p style={{ fontSize: '13px', color: 'rgba(187,247,208,0.5)' }}>
+            Demo:{' '}
+            <button onClick={() => { setTrackingNumber('SWL-2024-001'); handleSearch('SWL-2024-001') }} style={{ background: 'none', border: 'none', color: '#4ade80', cursor: 'pointer', fontSize: '13px', fontWeight: 700, textDecoration: 'underline' }}>
+              SWL-2024-001
+            </button>
+          </p>
 
           <div className="mini-cards" style={{ marginTop: '64px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '16px' }}>
             {[
@@ -358,8 +364,16 @@ function TrackingContent() {
                         return (
                           <div key={h.id} style={{ display: 'flex', gap: '12px', paddingBottom: i < history.length - 1 ? '16px' : '0', position: 'relative' }}>
                             {i < history.length - 1 && <div style={{ position: 'absolute', left: '10px', top: '22px', bottom: 0, width: '2px', background: '#e2e8f0' }} />}
-                            <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: isLatest ? '#16a34a' : '#e2e8f0', flexShrink: 0, zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              {isLatest && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
+                            <div style={{ position: 'relative', flexShrink: 0, zIndex: 1 }}>
+                              {isLatest && (
+                                <>
+                                  <div style={{ position: 'absolute', inset: '-5px', borderRadius: '50%', background: 'rgba(22,163,74,0.2)', animation: 'pulse-ring 1.8s ease-out infinite' }} />
+                                  <div style={{ position: 'absolute', inset: '-2px', borderRadius: '50%', background: 'rgba(22,163,74,0.15)', animation: 'pulse-ring 1.8s ease-out 0.5s infinite' }} />
+                                </>
+                              )}
+                              <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {isLatest && <div style={{ width: '6px', height: '6px', background: 'white', borderRadius: '50%' }} />}
+                              </div>
                             </div>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: 'inline-flex', background: c.bg, color: c.color, fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginBottom: '4px' }}>
