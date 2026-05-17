@@ -9,6 +9,7 @@ import {
   Plus, X, ChevronDown, LogOut, Edit,
   MapPin, User, Mail, Phone, Weight,
   BarChart3, AlertCircle, Eye, Globe, Zap, Shield,
+  Download,
 } from 'lucide-react'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'swiftlane2024'
@@ -33,6 +34,160 @@ const generateTrackingNumber = () => {
   const year = new Date().getFullYear()
   const rand = Math.floor(Math.random() * 90000) + 10000
   return `SWL-${year}-${rand}`
+}
+
+const downloadReceipt = (shipment: Shipment) => {
+  const serviceLabels: Record<string, string> = {
+    standard: 'Standard Shipping (3-5 days)',
+    express: 'Express Delivery (1-2 days)',
+    same_day: 'Same Day Delivery',
+    international: 'International Freight (7-14 days)',
+  }
+  const statusLabels: Record<string, string> = {
+    pending: 'Order Placed',
+    picked_up: 'Preparing to Ship',
+    in_transit: 'In Transit',
+    out_for_delivery: 'Out for Delivery',
+    delivered: 'Delivered',
+  }
+  const date = new Date(shipment.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const estDelivery = shipment.estimated_delivery ? new Date(shipment.estimated_delivery).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Receipt - ${shipment.tracking_number}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; color: #0f172a; background: white; padding: 40px; max-width: 700px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #f1f5f9; }
+  .logo { font-size: 24px; font-weight: 900; color: #052e16; }
+  .logo span { color: #16a34a; }
+  .logo-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+  .receipt-badge { background: #dcfce7; color: #16a34a; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .tracking { background: linear-gradient(135deg, #052e16, #14532d); color: white; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
+  .tracking-label { font-size: 11px; color: rgba(187,247,208,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .tracking-number { font-size: 28px; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 12px; }
+  .tracking-meta { display: flex; gap: 24px; font-size: 13px; color: rgba(187,247,208,0.85); }
+  .section { background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #f1f5f9; }
+  .section-title { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-label { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+  .field-value { font-size: 14px; font-weight: 600; color: #0f172a; }
+  .divider { height: 1px; background: #f1f5f9; margin: 8px 0; }
+  .route { display: flex; gap: 16px; align-items: center; }
+  .route-box { flex: 1; background: white; border-radius: 10px; padding: 14px; border: 1px solid #f1f5f9; }
+  .route-arrow { font-size: 20px; color: #16a34a; font-weight: 900; }
+  .status-badge { display: inline-block; background: #dcfce7; color: #16a34a; font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 999px; }
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; text-align: center; color: #94a3b8; font-size: 12px; line-height: 1.8; }
+  .footer strong { color: #16a34a; }
+  @media print { body { padding: 20px; } }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="logo">Swift<span>Lane</span></div>
+      <div class="logo-sub">Logistics</div>
+      <div style="font-size:12px;color:#64748b;margin-top:6px;">123 Logistics Avenue, Lagos, Nigeria</div>
+      <div style="font-size:12px;color:#64748b;">info@swiftlanelogs.com • +234 800 000 0000</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="receipt-badge">Shipment Receipt</div>
+      <div style="font-size:12px;color:#94a3b8;margin-top:8px;">Issued: ${date}</div>
+    </div>
+  </div>
+
+  <div class="tracking">
+    <div class="tracking-label">Tracking Number</div>
+    <div class="tracking-number">${shipment.tracking_number}</div>
+    <div class="tracking-meta">
+      <span>Status: <strong style="color:#4ade80;">${statusLabels[shipment.status] || shipment.status}</strong></span>
+      <span>Est. Delivery: <strong>${estDelivery}</strong></span>
+    </div>
+  </div>
+
+  <div class="route">
+    <div class="route-box">
+      <div class="field-label">From</div>
+      <div class="field-value">${shipment.sender_name}</div>
+      <div style="font-size:13px;color:#64748b;margin-top:2px;">${shipment.origin_city}, ${shipment.origin_country}</div>
+      ${shipment.sender_address ? `<div style="font-size:12px;color:#94a3b8;margin-top:2px;">${shipment.sender_address}</div>` : ''}
+    </div>
+    <div class="route-arrow">→</div>
+    <div class="route-box">
+      <div class="field-label">To</div>
+      <div class="field-value">${shipment.receiver_name}</div>
+      <div style="font-size:13px;color:#64748b;margin-top:2px;">${shipment.destination_city}, ${shipment.destination_country}</div>
+      ${shipment.receiver_address ? `<div style="font-size:12px;color:#94a3b8;margin-top:2px;">${shipment.receiver_address}</div>` : ''}
+    </div>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div class="section">
+      <div class="section-title">Package Details</div>
+      <div class="grid">
+        <div>
+          <div class="field-label">Service Type</div>
+          <div class="field-value">${serviceLabels[shipment.service_type] || shipment.service_type}</div>
+        </div>
+        <div>
+          <div class="field-label">Package Weight</div>
+          <div class="field-value">${shipment.package_weight ? shipment.package_weight + ' kg' : 'N/A'}</div>
+        </div>
+        <div>
+          <div class="field-label">Contents Description</div>
+          <div class="field-value">${shipment.package_description || 'N/A'}</div>
+        </div>
+        <div>
+          <div class="field-label">Booking Date</div>
+          <div class="field-value">${date}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Contact Information</div>
+      <div class="grid">
+        <div>
+          <div class="field-label">Sender Email</div>
+          <div class="field-value">${shipment.sender_email || 'N/A'}</div>
+        </div>
+        <div>
+          <div class="field-label">Sender Phone</div>
+          <div class="field-value">${shipment.sender_phone || 'N/A'}</div>
+        </div>
+        <div>
+          <div class="field-label">Receiver Email</div>
+          <div class="field-value">${shipment.receiver_email || 'N/A'}</div>
+        </div>
+        <div>
+          <div class="field-label">Receiver Phone</div>
+          <div class="field-value">${shipment.receiver_phone || 'N/A'}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Thank you for choosing <strong>SwiftLane Logistics</strong></p>
+    <p>For support, contact us at <strong>info@swiftlanelogs.com</strong> or call <strong>+234 800 000 0000</strong></p>
+    <p style="margin-top:8px;font-size:11px;">This is an automatically generated receipt. Please keep it for your records.</p>
+    <p style="font-size:11px;">© ${new Date().getFullYear()} SwiftLane Logistics. All rights reserved.</p>
+  </div>
+</body>
+</html>`
+
+  const blob = new Blob([html], { type: 'text/html' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `SwiftLane-Receipt-${shipment.tracking_number}.html`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 type Tab = 'dashboard' | 'shipments' | 'create'
@@ -496,13 +651,21 @@ export default function AdminPage() {
                             {s.estimated_delivery ? new Date(s.estimated_delivery).toLocaleDateString() : 'N/A'}
                           </td>
                           <td style={{ padding: '14px 16px' }}>
-                            <button
-                              onClick={() => openDetail(s)}
-                              className="action-btn"
-                              style={{ background: '#f1f5f9', color: '#374151', border: 'none', padding: '7px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', transition: 'all 0.2s', whiteSpace: 'nowrap' }}
-                            >
-                              <Edit size={13} /> Update
-                            </button>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <button
+                                onClick={() => openDetail(s)}
+                                className="action-btn"
+                                style={{ background: '#f1f5f9', color: '#374151', border: 'none', padding: '7px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', transition: 'all 0.2s', whiteSpace: 'nowrap' }}
+                              >
+                                <Edit size={13} /> Update
+                              </button>
+                              <button
+                                onClick={() => downloadReceipt(s)}
+                                style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '7px 10px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}
+                              >
+                                <Download size={13} /> Receipt
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       )
@@ -678,9 +841,17 @@ export default function AdminPage() {
                 <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 4px 0' }}>Update Shipment</p>
                 <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#0f172a', margin: 0 }}>{selectedShipment.tracking_number}</h2>
               </div>
-              <button onClick={() => setShowDetail(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <X size={18} color="#64748b" />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  onClick={() => downloadReceipt(selectedShipment)}
+                  style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', borderRadius: '10px', padding: '8px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600 }}
+                >
+                  <Download size={15} /> Receipt
+                </button>
+                <button onClick={() => setShowDetail(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <X size={18} color="#64748b" />
+                </button>
+              </div>
             </div>
 
             <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
