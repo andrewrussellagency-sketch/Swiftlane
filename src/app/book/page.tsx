@@ -125,6 +125,27 @@ export default function BookPage() {
         })
       }
 
+      // Send confirmation emails
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tracking_number: tracking,
+          sender_name: form.sender_name,
+          sender_email: form.sender_email,
+          receiver_name: form.receiver_name,
+          receiver_email: form.receiver_email,
+          origin_city: form.origin_city,
+          origin_country: form.origin_country,
+          destination_city: form.destination_city,
+          destination_country: form.destination_country,
+          service_type: form.service_type,
+          package_description: form.package_description,
+          package_weight: form.package_weight,
+          estimated_delivery: estimated.toISOString().split('T')[0],
+        }),
+      })
+
       setTrackingNumber(tracking)
       setStep(5)
     } catch (err) {
