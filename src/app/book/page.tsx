@@ -142,7 +142,7 @@ export default function BookPage() {
           service_type: form.service_type,
           package_description: form.package_description,
           package_weight: form.package_weight,
-          estimated_delivery: estimated.toISOString().split('T')[0],
+         estimated_delivery: estimatedDelivery.toISOString().split('T')[0],
         }),
       })
 
