@@ -91,7 +91,7 @@ const downloadReceipt = (shipment: Shipment) => {
       <div class="logo">Swift<span>Lane</span></div>
       <div class="logo-sub">Logistics</div>
       <div style="font-size:12px;color:#64748b;margin-top:6px;">123 Logistics Avenue, Lagos, Nigeria</div>
-      <div style="font-size:12px;color:#64748b;">info@swiftlanelogs.com • +234 800 000 0000</div>
+      <div style="font-size:12px;color:#64748b;">info@swiftlanelogs.com • +1 706 452 1539</div>
     </div>
     <div style="text-align:right;">
       <div class="receipt-badge">Shipment Receipt</div>
@@ -172,7 +172,7 @@ const downloadReceipt = (shipment: Shipment) => {
 
   <div class="footer">
     <p>Thank you for choosing <strong>SwiftLane Logistics</strong></p>
-    <p>For support, contact us at <strong>info@swiftlanelogs.com</strong> or call <strong>+234 800 000 0000</strong></p>
+    <p>For support, contact us at <strong>info@swiftlanelogs.com</strong> or call <strong>+1 706 452 1539</strong></p>
     <p style="margin-top:8px;font-size:11px;">This is an automatically generated receipt. Please keep it for your records.</p>
     <p style="font-size:11px;">© ${new Date().getFullYear()} SwiftLane Logistics. All rights reserved.</p>
   </div>
@@ -721,7 +721,7 @@ export default function AdminPage() {
                       {[
                         { label: 'Full Name *', field: 'sender_name', placeholder: 'John Smith' },
                         { label: 'Email', field: 'sender_email', placeholder: 'john@email.com' },
-                        { label: 'Phone', field: 'sender_phone', placeholder: '+234 800 000 0000' },
+                        { label: 'Phone', field: 'sender_phone', placeholder: '+1 706 452 1539' },
                         { label: 'Address', field: 'sender_address', placeholder: '123 Main St' },
                         { label: 'Origin City *', field: 'origin_city', placeholder: 'Lagos' },
                         { label: 'Origin Country *', field: 'origin_country', placeholder: 'Nigeria' },
