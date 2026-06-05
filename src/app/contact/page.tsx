@@ -211,7 +211,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label style={labelStyle}>Phone Number</label>
-                      <input className="input-field" style={inputStyle} placeholder="+234 800 000 0000" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
+                      <input className="input-field" style={inputStyle} placeholder="+1 800 000 0000" value={form.phone} onChange={(e) => update('phone', e.target.value)} />
                     </div>
                   </div>
                   <div>
