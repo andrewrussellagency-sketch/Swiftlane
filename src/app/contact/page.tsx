@@ -133,9 +133,9 @@ export default function ContactPage() {
               <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a', margin: '0 0 20px 0' }}>Our Office</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {[
-                  { icon: MapPin, color: '#16a34a', bg: '#dcfce7', label: 'Address', value: '123 Logistics Avenue\nLagos Island, Lagos\nNigeria' },
-                  { icon: Phone, color: '#2563eb', bg: '#dbeafe', label: 'Phone', value: '+234 800 000 0000\n+234 800 000 0001' },
-                  { icon: Mail, color: '#ea580c', bg: '#ffedd5', label: 'Email', value: 'info@swiftlanelogs.com\nsupport@swiftlanelogs.com' },
+                  { icon: MapPin, color: '#16a34a', bg: '#dcfce7', label: 'Address', value: '1801 Main St\nKansas City, MO\nUnited States' },
+                  { icon: Phone, color: '#2563eb', bg: '#dbeafe', label: 'Phone', value: '+1 701 452 1539\n+1 702 452 1539' },
+                  { icon: Mail, color: '#ea580c', bg: '#ffedd5', label: 'Email', value: 'info@swiftlanelogs.com' },
                   { icon: Clock, color: '#7c3aed', bg: '#ede9fe', label: 'Hours', value: 'Monday - Sunday\n24 hours a day' },
                 ].map((item) => (
                   <div key={item.label} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>

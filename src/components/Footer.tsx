@@ -79,12 +79,12 @@ export default function Footer() {
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <MapPin size={15} color="#16a34a" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <span style={{ fontSize: '14px', color: '#6b7280', lineHeight: 1.65 }}>
-                  123 Logistics Avenue,<br />New York, NY 10001<br />United States
+                  1801 Main St,<br />Kansas City, MO 64108<br />United States
                 </span>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <Phone size={15} color="#16a34a" style={{ flexShrink: 0 }} />
-                <span style={{ fontSize: '14px', color: '#6b7280' }}>+1 800 000 0000</span>
+                <span style={{ fontSize: '14px', color: '#6b7280' }}>+1 706 452 1539</span>
               </div>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                 <Mail size={15} color="#16a34a" style={{ flexShrink: 0 }} />
