@@ -8,7 +8,7 @@ import {
   Package, Truck, CheckCircle, Clock, Search,
   Plus, X, LogOut, Edit,
   MapPin, User, Globe,
-  BarChart3, AlertCircle, Download,
+  BarChart3, AlertCircle, Download, Trash2,
 } from 'lucide-react'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'swiftlane2024'
@@ -155,6 +155,25 @@ const downloadReceipt = (shipment: Shipment) => {
   URL.revokeObjectURL(url)
 }
 
+const deleteShipment = async (
+  shipment: Shipment,
+  fetchShipments: () => void,
+  closeModal?: () => void
+) => {
+  const confirmed = window.confirm(
+    `Are you sure you want to delete shipment ${shipment.tracking_number}?\n\nThis will permanently remove the shipment and all its tracking history.`
+  )
+  if (!confirmed) return
+  try {
+    await supabase.from('tracking_history').delete().eq('shipment_id', shipment.id)
+    await supabase.from('shipments').delete().eq('id', shipment.id)
+    fetchShipments()
+    if (closeModal) closeModal()
+  } catch {
+    alert('Failed to delete shipment. Please try again.')
+  }
+}
+
 type Tab = 'dashboard' | 'shipments' | 'create'
 
 export default function AdminPage() {
@@ -289,7 +308,7 @@ export default function AdminPage() {
         await supabase.from('tracking_history').insert({
           shipment_id: newShipment.id, status: 'pending',
           location: `${createForm.origin_city}, ${createForm.origin_country}`,
-          description: 'Order placed and confirmed by admin',
+          description: 'Order placed and confirmed',
         })
       }
       setCreateSuccess(tracking)
@@ -611,6 +630,10 @@ export default function AdminPage() {
                                 style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '6px 8px', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
                                 <Download size={12} /> Receipt
                               </button>
+                              <button onClick={() => deleteShipment(s, fetchShipments)}
+                                style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', padding: '6px 8px', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
+                                <Trash2 size={12} />
+                              </button>
                             </div>
                           </td>
                         </tr>
@@ -657,6 +680,10 @@ export default function AdminPage() {
                       <button onClick={() => downloadReceipt(s)}
                         style={{ flex: 1, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '9px', borderRadius: '9px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
                         <Download size={14} /> Receipt
+                      </button>
+                      <button onClick={() => deleteShipment(s, fetchShipments)}
+                        style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', padding: '9px 14px', borderRadius: '9px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -818,6 +845,10 @@ export default function AdminPage() {
                 <button onClick={() => downloadReceipt(selectedShipment)}
                   style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', borderRadius: '10px', padding: '7px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 600 }}>
                   <Download size={14} /> Receipt
+                </button>
+                <button onClick={() => deleteShipment(selectedShipment, fetchShipments, () => setShowDetail(false))}
+                  style={{ background: '#fee2e2', border: '1px solid #fecaca', color: '#dc2626', borderRadius: '10px', padding: '7px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 600 }}>
+                  <Trash2 size={14} /> Delete
                 </button>
                 <button onClick={() => setShowDetail(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '34px', height: '34px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <X size={16} color="#64748b" />
