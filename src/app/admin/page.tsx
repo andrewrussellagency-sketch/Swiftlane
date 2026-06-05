@@ -6,10 +6,9 @@ import { supabase } from '@/lib/supabase'
 import type { Shipment } from '@/lib/supabase'
 import {
   Package, Truck, CheckCircle, Clock, Search,
-  Plus, X, ChevronDown, LogOut, Edit,
-  MapPin, User, Mail, Phone, Weight,
-  BarChart3, AlertCircle, Eye, Globe, Zap, Shield,
-  Download,
+  Plus, X, LogOut, Edit,
+  MapPin, User, Globe,
+  BarChart3, AlertCircle, Download,
 } from 'lucide-react'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'swiftlane2024'
@@ -64,22 +63,19 @@ const downloadReceipt = (shipment: Shipment) => {
   .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; padding-bottom: 24px; border-bottom: 2px solid #f1f5f9; }
   .logo { font-size: 24px; font-weight: 900; color: #052e16; }
   .logo span { color: #16a34a; }
-  .logo-sub { font-size: 11px; color: #94a3b8; margin-top: 2px; }
   .receipt-badge { background: #dcfce7; color: #16a34a; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.08em; }
   .tracking { background: linear-gradient(135deg, #052e16, #14532d); color: white; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
   .tracking-label { font-size: 11px; color: rgba(187,247,208,0.7); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
   .tracking-number { font-size: 28px; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 12px; }
-  .tracking-meta { display: flex; gap: 24px; font-size: 13px; color: rgba(187,247,208,0.85); }
+  .tracking-meta { display: flex; gap: 24px; font-size: 13px; color: rgba(187,247,208,0.85); flex-wrap: wrap; }
   .section { background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #f1f5f9; }
   .section-title { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .field-label { font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
   .field-value { font-size: 14px; font-weight: 600; color: #0f172a; }
-  .divider { height: 1px; background: #f1f5f9; margin: 8px 0; }
-  .route { display: flex; gap: 16px; align-items: center; }
+  .route { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; }
   .route-box { flex: 1; background: white; border-radius: 10px; padding: 14px; border: 1px solid #f1f5f9; }
   .route-arrow { font-size: 20px; color: #16a34a; font-weight: 900; }
-  .status-badge { display: inline-block; background: #dcfce7; color: #16a34a; font-size: 12px; font-weight: 700; padding: 5px 14px; border-radius: 999px; }
   .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #f1f5f9; text-align: center; color: #94a3b8; font-size: 12px; line-height: 1.8; }
   .footer strong { color: #16a34a; }
   @media print { body { padding: 20px; } }
@@ -89,16 +85,15 @@ const downloadReceipt = (shipment: Shipment) => {
   <div class="header">
     <div>
       <div class="logo">Swift<span>Lane</span></div>
-      <div class="logo-sub">Logistics</div>
-      <div style="font-size:12px;color:#64748b;margin-top:6px;">123 Logistics Avenue, Lagos, Nigeria</div>
-      <div style="font-size:12px;color:#64748b;">info@swiftlanelogs.com • +1 706 452 1539</div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:2px;">Logistics</div>
+      <div style="font-size:12px;color:#64748b;margin-top:6px;">123 Logistics Avenue, New York, NY 10001</div>
+      <div style="font-size:12px;color:#64748b;">info@swiftlanelogs.com • +1 800 000 0000</div>
     </div>
     <div style="text-align:right;">
       <div class="receipt-badge">Shipment Receipt</div>
       <div style="font-size:12px;color:#94a3b8;margin-top:8px;">Issued: ${date}</div>
     </div>
   </div>
-
   <div class="tracking">
     <div class="tracking-label">Tracking Number</div>
     <div class="tracking-number">${shipment.tracking_number}</div>
@@ -107,7 +102,6 @@ const downloadReceipt = (shipment: Shipment) => {
       <span>Est. Delivery: <strong>${estDelivery}</strong></span>
     </div>
   </div>
-
   <div class="route">
     <div class="route-box">
       <div class="field-label">From</div>
@@ -123,56 +117,27 @@ const downloadReceipt = (shipment: Shipment) => {
       ${shipment.receiver_address ? `<div style="font-size:12px;color:#94a3b8;margin-top:2px;">${shipment.receiver_address}</div>` : ''}
     </div>
   </div>
-
-  <div style="margin-top:16px;">
-    <div class="section">
-      <div class="section-title">Package Details</div>
-      <div class="grid">
-        <div>
-          <div class="field-label">Service Type</div>
-          <div class="field-value">${serviceLabels[shipment.service_type] || shipment.service_type}</div>
-        </div>
-        <div>
-          <div class="field-label">Package Weight</div>
-          <div class="field-value">${shipment.package_weight ? shipment.package_weight + ' kg' : 'N/A'}</div>
-        </div>
-        <div>
-          <div class="field-label">Contents Description</div>
-          <div class="field-value">${shipment.package_description || 'N/A'}</div>
-        </div>
-        <div>
-          <div class="field-label">Booking Date</div>
-          <div class="field-value">${date}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Contact Information</div>
-      <div class="grid">
-        <div>
-          <div class="field-label">Sender Email</div>
-          <div class="field-value">${shipment.sender_email || 'N/A'}</div>
-        </div>
-        <div>
-          <div class="field-label">Sender Phone</div>
-          <div class="field-value">${shipment.sender_phone || 'N/A'}</div>
-        </div>
-        <div>
-          <div class="field-label">Receiver Email</div>
-          <div class="field-value">${shipment.receiver_email || 'N/A'}</div>
-        </div>
-        <div>
-          <div class="field-label">Receiver Phone</div>
-          <div class="field-value">${shipment.receiver_phone || 'N/A'}</div>
-        </div>
-      </div>
+  <div class="section">
+    <div class="section-title">Package Details</div>
+    <div class="grid">
+      <div><div class="field-label">Service Type</div><div class="field-value">${serviceLabels[shipment.service_type] || shipment.service_type}</div></div>
+      <div><div class="field-label">Package Weight</div><div class="field-value">${shipment.package_weight ? shipment.package_weight + ' kg' : 'N/A'}</div></div>
+      <div><div class="field-label">Contents</div><div class="field-value">${shipment.package_description || 'N/A'}</div></div>
+      <div><div class="field-label">Booking Date</div><div class="field-value">${date}</div></div>
     </div>
   </div>
-
+  <div class="section">
+    <div class="section-title">Contact Information</div>
+    <div class="grid">
+      <div><div class="field-label">Sender Email</div><div class="field-value">${shipment.sender_email || 'N/A'}</div></div>
+      <div><div class="field-label">Sender Phone</div><div class="field-value">${shipment.sender_phone || 'N/A'}</div></div>
+      <div><div class="field-label">Receiver Email</div><div class="field-value">${shipment.receiver_email || 'N/A'}</div></div>
+      <div><div class="field-label">Receiver Phone</div><div class="field-value">${shipment.receiver_phone || 'N/A'}</div></div>
+    </div>
+  </div>
   <div class="footer">
     <p>Thank you for choosing <strong>SwiftLane Logistics</strong></p>
-    <p>For support, contact us at <strong>info@swiftlanelogs.com</strong> or call <strong>+1 706 452 1539</strong></p>
+    <p>For support, contact us at <strong>info@swiftlanelogs.com</strong> or call <strong>+1 800 000 0000</strong></p>
     <p style="margin-top:8px;font-size:11px;">This is an automatically generated receipt. Please keep it for your records.</p>
     <p style="font-size:11px;">© ${new Date().getFullYear()} SwiftLane Logistics. All rights reserved.</p>
   </div>
@@ -210,7 +175,6 @@ export default function AdminPage() {
   const [updateSuccess, setUpdateSuccess] = useState(false)
   const [stats, setStats] = useState({ total: 0, pending: 0, in_transit: 0, delivered: 0 })
 
-  // Create form
   const emptyForm = {
     sender_name: '', sender_email: '', sender_phone: '', sender_address: '',
     origin_city: '', origin_country: '',
@@ -250,10 +214,7 @@ export default function AdminPage() {
 
   const fetchShipments = async () => {
     setLoading(true)
-    const { data } = await supabase
-      .from('shipments')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data } = await supabase.from('shipments').select('*').order('created_at', { ascending: false })
     if (data) {
       setShipments(data)
       setStats({
@@ -279,13 +240,7 @@ export default function AdminPage() {
     if (!selectedShipment || !newStatus) return
     setUpdateLoading(true)
     try {
-      // Update shipment status
-      await supabase
-        .from('shipments')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', selectedShipment.id)
-
-      // Auto-add tracking history
+      await supabase.from('shipments').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', selectedShipment.id)
       await supabase.from('tracking_history').insert({
         shipment_id: selectedShipment.id,
         status: newStatus,
@@ -293,7 +248,6 @@ export default function AdminPage() {
         description: customNote || STATUS_DESCRIPTIONS[newStatus],
         timestamp: new Date().toISOString(),
       })
-
       setUpdateSuccess(true)
       setSelectedShipment({ ...selectedShipment, status: newStatus })
       fetchShipments()
@@ -316,46 +270,31 @@ export default function AdminPage() {
       const tracking = generateTrackingNumber()
       const estimated = new Date()
       estimated.setDate(estimated.getDate() + (createForm.service_type === 'express' ? 2 : createForm.service_type === 'same_day' ? 1 : 5))
-
       await supabase.from('shipments').insert({
         tracking_number: tracking,
-        sender_name: createForm.sender_name,
-        sender_email: createForm.sender_email,
-        sender_phone: createForm.sender_phone,
-        sender_address: createForm.sender_address,
-        receiver_name: createForm.receiver_name,
-        receiver_email: createForm.receiver_email,
-        receiver_phone: createForm.receiver_phone,
-        receiver_address: createForm.receiver_address,
-        origin_city: createForm.origin_city,
-        origin_country: createForm.origin_country,
-        destination_city: createForm.destination_city,
-        destination_country: createForm.destination_country,
+        sender_name: createForm.sender_name, sender_email: createForm.sender_email,
+        sender_phone: createForm.sender_phone, sender_address: createForm.sender_address,
+        receiver_name: createForm.receiver_name, receiver_email: createForm.receiver_email,
+        receiver_phone: createForm.receiver_phone, receiver_address: createForm.receiver_address,
+        origin_city: createForm.origin_city, origin_country: createForm.origin_country,
+        destination_city: createForm.destination_city, destination_country: createForm.destination_country,
         package_weight: parseFloat(createForm.package_weight) || 0,
         package_description: createForm.package_description,
-        service_type: createForm.service_type,
-        status: 'pending',
+        service_type: createForm.service_type, status: 'pending',
         estimated_delivery: estimated.toISOString().split('T')[0],
       })
-
-      const { data: newShipment } = await supabase
-        .from('shipments')
-        .select('id')
-        .eq('tracking_number', tracking)
-        .single()
-
+      await new Promise(r => setTimeout(r, 500))
+      const { data: newShipment } = await supabase.from('shipments').select('id').eq('tracking_number', tracking).single()
       if (newShipment) {
         await supabase.from('tracking_history').insert({
-          shipment_id: newShipment.id,
-          status: 'pending',
+          shipment_id: newShipment.id, status: 'pending',
           location: `${createForm.origin_city}, ${createForm.origin_country}`,
           description: 'Order placed and confirmed by admin',
         })
       }
-
       setCreateSuccess(tracking)
       setCreateForm(emptyForm)
-      fetchShipments()
+      await fetchShipments()
     } catch {
       setCreateError('Something went wrong. Please try again.')
     } finally {
@@ -371,9 +310,7 @@ export default function AdminPage() {
     return matchSearch && matchStatus
   })
 
-  const getStatusStyle = (status: string) => {
-    return STATUS_OPTIONS.find((s) => s.value === status) || STATUS_OPTIONS[0]
-  }
+  const getStatusStyle = (status: string) => STATUS_OPTIONS.find((s) => s.value === status) || STATUS_OPTIONS[0]
 
   const inputStyle = {
     width: '100%', boxSizing: 'border-box' as const,
@@ -382,168 +319,177 @@ export default function AdminPage() {
     outline: 'none', background: 'white',
     fontFamily: 'system-ui,-apple-system,sans-serif',
   }
+  const labelStyle = { fontSize: '12px', fontWeight: 600 as const, color: '#374151', marginBottom: '5px', display: 'block' as const }
 
-  const labelStyle = {
-    fontSize: '12px', fontWeight: 600 as const,
-    color: '#374151', marginBottom: '5px', display: 'block' as const,
-  }
-
-  // LOGIN SCREEN
+  // LOGIN
   if (!authed) {
     return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#052e16 0%,#14532d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'system-ui,-apple-system,sans-serif' }}>
-        <div style={{ background: 'white', borderRadius: '24px', padding: '48px 40px', width: '100%', maxWidth: '420px', boxShadow: '0 40px 80px rgba(0,0,0,0.3)', textAlign: 'center' }}>
+      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#052e16,#14532d)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', fontFamily: 'system-ui,-apple-system,sans-serif' }}>
+        <div style={{ background: 'white', borderRadius: '24px', padding: '48px 36px', width: '100%', maxWidth: '420px', boxShadow: '0 40px 80px rgba(0,0,0,0.3)', textAlign: 'center' }}>
           <div style={{ background: '#dcfce7', width: '64px', height: '64px', borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
             <Package size={32} color="#16a34a" />
           </div>
           <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 6px 0' }}>Admin Dashboard</h1>
           <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 32px 0' }}>SwiftLane Logistics</p>
-
           <div style={{ textAlign: 'left', marginBottom: '16px' }}>
             <label style={labelStyle}>Admin Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && login()}
-              placeholder="Enter password"
-              style={{ ...inputStyle, padding: '14px 16px', fontSize: '15px' }}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && login()} placeholder="Enter password" style={{ ...inputStyle, padding: '14px 16px', fontSize: '15px' }} />
           </div>
-
           {pwError && (
             <div style={{ background: '#fee2e2', color: '#dc2626', fontSize: '13px', padding: '10px 14px', borderRadius: '10px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <AlertCircle size={15} /> {pwError}
             </div>
           )}
-
-          <button
-            onClick={login}
-            style={{ width: '100%', background: 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '15px', borderRadius: '12px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 16px rgba(22,163,74,0.3)' }}
-          >
+          <button onClick={login} style={{ width: '100%', background: 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '15px', padding: '15px', borderRadius: '12px', border: 'none', cursor: 'pointer' }}>
             Login to Dashboard
           </button>
-
-          <Link href="/" style={{ display: 'block', marginTop: '20px', fontSize: '13px', color: '#94a3b8', textDecoration: 'none' }}>
-            Back to website
-          </Link>
+          <Link href="/" style={{ display: 'block', marginTop: '20px', fontSize: '13px', color: '#94a3b8', textDecoration: 'none' }}>Back to website</Link>
         </div>
       </div>
     )
   }
 
+  const navItems = [
+    { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
+    { id: 'shipments', icon: Package, label: 'Shipments' },
+    { id: 'create', icon: Plus, label: 'Create' },
+  ]
+
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'system-ui,-apple-system,sans-serif', display: 'flex' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'system-ui,-apple-system,sans-serif' }}>
 
       <style>{`
-        .nav-btn:hover { background: rgba(22,163,74,0.1) !important; color: #16a34a !important; }
-        .nav-btn.active { background: #16a34a !important; color: white !important; }
-        .table-row:hover { background: #f8fafc !important; }
-        .action-btn:hover { background: #16a34a !important; color: white !important; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes success-pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .nav-btn:hover { background: rgba(22,163,74,0.1) !important; color: #16a34a !important; }
+        .nav-btn.active { background: #16a34a !important; color: white !important; }
+        .action-btn:hover { background: #16a34a !important; color: white !important; }
+        .ship-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important; }
+
+        /* DESKTOP layout */
+        .admin-sidebar { display: flex; }
+        .admin-bottom-nav { display: none; }
+        .admin-main { margin-left: 220px; padding: 32px; }
+        .stats-grid { grid-template-columns: repeat(4,1fr); }
+        .create-grid { grid-template-columns: 1fr 1fr 1fr; }
+        .desktop-table { display: block; }
+        .mobile-cards { display: none; }
+
+        /* MOBILE layout */
         @media (max-width: 768px) {
-          .sidebar { width: 60px !important; }
-          .sidebar-label { display: none !important; }
-          .main-content { margin-left: 60px !important; }
-          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .admin-sidebar { display: none !important; }
+          .admin-bottom-nav { display: flex !important; }
+          .admin-main { margin-left: 0 !important; padding: 16px 16px 80px 16px !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
           .create-grid { grid-template-columns: 1fr !important; }
+          .desktop-table { display: none !important; }
+          .mobile-cards { display: flex !important; }
+          .modal-inner { border-radius: 20px 20px 0 0 !important; max-height: 92vh !important; }
+          .modal-wrap { align-items: flex-end !important; padding: 0 !important; }
+          .page-title { font-size: 20px !important; }
+          .filters-row { flex-direction: column !important; }
+          .filters-row > * { width: 100% !important; min-width: unset !important; }
         }
       `}</style>
 
-      {/* SIDEBAR */}
-      <div className="sidebar" style={{ width: '220px', background: 'white', borderRight: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50, boxShadow: '2px 0 12px rgba(0,0,0,0.04)' }}>
-        {/* Logo */}
+      {/* DESKTOP SIDEBAR */}
+      <div className="admin-sidebar" style={{ width: '220px', background: 'white', borderRight: '1px solid #f1f5f9', flexDirection: 'column', position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50, boxShadow: '2px 0 12px rgba(0,0,0,0.04)' }}>
         <div style={{ padding: '24px 20px', borderBottom: '1px solid #f1f5f9' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ background: '#16a34a', padding: '8px', borderRadius: '10px' }}>
               <Package size={18} color="white" />
             </div>
-            <div className="sidebar-label">
+            <div>
               <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a' }}>Swift<span style={{ color: '#16a34a' }}>Lane</span></div>
               <div style={{ fontSize: '10px', color: '#94a3b8' }}>Admin Panel</div>
             </div>
           </div>
         </div>
-
-        {/* Nav */}
         <nav style={{ padding: '16px 12px', flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          {[
-            { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
-            { id: 'shipments', icon: Package, label: 'Shipments' },
-            { id: 'create', icon: Plus, label: 'Create Order' },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setTab(item.id as Tab)}
-              className={`nav-btn ${tab === item.id ? 'active' : ''}`}
-              style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', background: 'none', color: '#64748b', fontWeight: 600, fontSize: '13px', width: '100%', textAlign: 'left', transition: 'all 0.2s' }}
-            >
+          {navItems.map((item) => (
+            <button key={item.id} onClick={() => setTab(item.id as Tab)} className={`nav-btn ${tab === item.id ? 'active' : ''}`}
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', background: 'none', color: '#64748b', fontWeight: 600, fontSize: '13px', width: '100%', textAlign: 'left', transition: 'all 0.2s' }}>
               <item.icon size={18} />
-              <span className="sidebar-label">{item.label}</span>
+              {item.label}
             </button>
           ))}
         </nav>
-
-        {/* Bottom */}
         <div style={{ padding: '16px 12px', borderTop: '1px solid #f1f5f9' }}>
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '10px', textDecoration: 'none', color: '#64748b', fontSize: '13px', fontWeight: 600, marginBottom: '4px' }}>
-            <Globe size={18} />
-            <span className="sidebar-label">View Website</span>
+            <Globe size={18} /> View Website
           </Link>
-          <button
-            onClick={logout}
-            style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', background: 'none', color: '#dc2626', fontSize: '13px', fontWeight: 600, width: '100%' }}
-          >
-            <LogOut size={18} />
-            <span className="sidebar-label">Logout</span>
+          <button onClick={logout} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '10px', border: 'none', cursor: 'pointer', background: 'none', color: '#dc2626', fontSize: '13px', fontWeight: 600, width: '100%' }}>
+            <LogOut size={18} /> Logout
           </button>
         </div>
       </div>
 
-      {/* MAIN CONTENT */}
-      <div className="main-content" style={{ marginLeft: '220px', flex: 1, padding: '32px', minHeight: '100vh' }}>
+      {/* MOBILE BOTTOM NAV */}
+      <div className="admin-bottom-nav" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50, background: 'white', borderTop: '1px solid #f1f5f9', padding: '8px 0', justifyContent: 'space-around', boxShadow: '0 -4px 20px rgba(0,0,0,0.08)' }}>
+        {navItems.map((item) => (
+          <button key={item.id} onClick={() => setTab(item.id as Tab)}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', padding: '6px 20px', border: 'none', background: 'none', cursor: 'pointer', color: tab === item.id ? '#16a34a' : '#94a3b8', fontWeight: tab === item.id ? 700 : 500, fontSize: '11px', flex: 1 }}>
+            <item.icon size={20} />
+            {item.label}
+          </button>
+        ))}
+        <button onClick={logout}
+          style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', padding: '6px 20px', border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontWeight: 500, fontSize: '11px', flex: 1 }}>
+          <LogOut size={20} />
+          Logout
+        </button>
+      </div>
 
-        {/* DASHBOARD TAB */}
+      {/* MAIN CONTENT */}
+      <div className="admin-main">
+
+        {/* DASHBOARD */}
         {tab === 'dashboard' && (
           <div>
-            <div style={{ marginBottom: '28px' }}>
-              <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>Dashboard</h1>
-              <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Welcome back! Here is an overview of your shipments.</p>
+            <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <h1 className="page-title" style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>Dashboard</h1>
+                <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>Overview of your shipments</p>
+              </div>
+              <Link href="/" style={{ fontSize: '12px', color: '#16a34a', fontWeight: 600, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Globe size={14} /> Website
+              </Link>
             </div>
 
             {/* Stats */}
-            <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '16px', marginBottom: '28px' }}>
+            <div className="stats-grid" style={{ display: 'grid', gap: '16px', marginBottom: '24px' }}>
               {[
                 { label: 'Total Shipments', value: stats.total, icon: Package, color: '#16a34a', bg: '#dcfce7' },
-                { label: 'Pending / Processing', value: stats.pending, icon: Clock, color: '#ea580c', bg: '#ffedd5' },
+                { label: 'Pending', value: stats.pending, icon: Clock, color: '#ea580c', bg: '#ffedd5' },
                 { label: 'In Transit', value: stats.in_transit, icon: Truck, color: '#2563eb', bg: '#dbeafe' },
                 { label: 'Delivered', value: stats.delivered, icon: CheckCircle, color: '#16a34a', bg: '#dcfce7' },
               ].map((stat) => (
-                <div key={stat.label} style={{ background: 'white', borderRadius: '16px', padding: '20px', border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <div style={{ background: stat.bg, padding: '10px', borderRadius: '12px' }}>
-                      <stat.icon size={20} color={stat.color} />
+                <div key={stat.label} style={{ background: 'white', borderRadius: '16px', padding: '18px', border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                    <div style={{ background: stat.bg, padding: '9px', borderRadius: '10px' }}>
+                      <stat.icon size={18} color={stat.color} />
                     </div>
-                    <span style={{ fontSize: '28px', fontWeight: 900, color: '#0f172a' }}>{stat.value}</span>
+                    <span style={{ fontSize: '26px', fontWeight: 900, color: '#0f172a' }}>{stat.value}</span>
                   </div>
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: 0, fontWeight: 500 }}>{stat.label}</p>
+                  <p style={{ fontSize: '12px', color: '#64748b', margin: 0, fontWeight: 500 }}>{stat.label}</p>
                 </div>
               ))}
             </div>
 
-            {/* Recent Shipments */}
-            <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
-              <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Recent Shipments</h3>
+            {/* Recent - Desktop Table */}
+            <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', overflow: 'hidden' }}>
+              <div style={{ padding: '16px 20px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Recent Shipments</h3>
                 <button onClick={() => setTab('shipments')} style={{ background: 'none', border: 'none', color: '#16a34a', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>View All</button>
               </div>
-              <div style={{ overflowX: 'auto' }}>
+
+              {/* Desktop Table */}
+              <div className="desktop-table" style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: '#f8fafc' }}>
                       {['Tracking #', 'Sender', 'Receiver', 'Route', 'Status', 'Date'].map((h) => (
-                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
+                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -551,26 +497,49 @@ export default function AdminPage() {
                     {shipments.slice(0, 5).map((s) => {
                       const st = getStatusStyle(s.status)
                       return (
-                        <tr key={s.id} className="table-row" style={{ borderTop: '1px solid #f1f5f9', cursor: 'pointer' }} onClick={() => { openDetail(s); }}>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>{s.tracking_number}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', color: '#374151' }}>{s.sender_name}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', color: '#374151' }}>{s.receiver_name}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '12px', color: '#64748b', whiteSpace: 'nowrap' }}>{s.origin_city} → {s.destination_city}</td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <span style={{ background: st.bg, color: st.color, fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', whiteSpace: 'nowrap' }}>
-                              {STATUS_OPTIONS.find((o) => o.value === s.status)?.label || s.status}
+                        <tr key={s.id} style={{ borderTop: '1px solid #f1f5f9', cursor: 'pointer' }} onClick={() => openDetail(s)}>
+                          <td style={{ padding: '13px 16px', fontSize: '13px', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>{s.tracking_number}</td>
+                          <td style={{ padding: '13px 16px', fontSize: '13px', color: '#374151' }}>{s.sender_name}</td>
+                          <td style={{ padding: '13px 16px', fontSize: '13px', color: '#374151' }}>{s.receiver_name}</td>
+                          <td style={{ padding: '13px 16px', fontSize: '12px', color: '#64748b', whiteSpace: 'nowrap' }}>{s.origin_city} → {s.destination_city}</td>
+                          <td style={{ padding: '13px 16px' }}>
+                            <span style={{ background: st.bg, color: st.color, fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>
+                              {STATUS_OPTIONS.find((o) => o.value === s.status)?.label}
                             </span>
                           </td>
-                          <td style={{ padding: '14px 16px', fontSize: '12px', color: '#94a3b8', whiteSpace: 'nowrap' }}>
-                            {new Date(s.created_at).toLocaleDateString()}
-                          </td>
+                          <td style={{ padding: '13px 16px', fontSize: '12px', color: '#94a3b8', whiteSpace: 'nowrap' }}>{new Date(s.created_at).toLocaleDateString()}</td>
                         </tr>
                       )
                     })}
+                    {shipments.length === 0 && !loading && (
+                      <tr><td colSpan={6} style={{ padding: '40px', textAlign: 'center', color: '#94a3b8' }}>No shipments yet.</td></tr>
+                    )}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="mobile-cards" style={{ flexDirection: 'column', gap: '1px', background: '#f1f5f9' }}>
+                {shipments.slice(0, 5).map((s) => {
+                  const st = getStatusStyle(s.status)
+                  return (
+                    <div key={s.id} className="ship-card" onClick={() => openDetail(s)}
+                      style={{ background: 'white', padding: '16px', cursor: 'pointer', transition: 'box-shadow 0.2s' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a' }}>{s.tracking_number}</span>
+                        <span style={{ background: st.bg, color: st.color, fontSize: '10px', fontWeight: 700, padding: '3px 8px', borderRadius: '999px' }}>
+                          {STATUS_OPTIONS.find((o) => o.value === s.status)?.label}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '12px', color: '#64748b' }}>
+                        <span style={{ fontWeight: 600, color: '#374151' }}>{s.sender_name}</span> → <span style={{ fontWeight: 600, color: '#374151' }}>{s.receiver_name}</span>
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>{s.origin_city} → {s.destination_city}</div>
+                    </div>
+                  )
+                })}
                 {shipments.length === 0 && !loading && (
-                  <div style={{ padding: '48px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>No shipments yet.</div>
+                  <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8', background: 'white' }}>No shipments yet.</div>
                 )}
               </div>
             </div>
@@ -580,90 +549,67 @@ export default function AdminPage() {
         {/* SHIPMENTS TAB */}
         {tab === 'shipments' && (
           <div>
-            <div style={{ marginBottom: '24px' }}>
-              <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>All Shipments</h1>
-              <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Manage and update all shipments</p>
+            <div style={{ marginBottom: '20px' }}>
+              <h1 className="page-title" style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>All Shipments</h1>
+              <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>Manage and update all shipments</p>
             </div>
 
-            {/* Filters */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <div className="filters-row" style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
               <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-                <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-                <input
-                  type="text"
-                  placeholder="Search by tracking number, sender, receiver..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  style={{ ...inputStyle, paddingLeft: '38px' }}
-                />
+                <Search size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+                <input type="text" placeholder="Search tracking, sender, receiver..." value={search} onChange={(e) => setSearch(e.target.value)} style={{ ...inputStyle, paddingLeft: '36px' }} />
               </div>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                style={{ ...inputStyle, width: 'auto', minWidth: '160px', cursor: 'pointer' }}
-              >
+              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} style={{ ...inputStyle, width: 'auto', minWidth: '140px', cursor: 'pointer' }}>
                 <option value="all">All Statuses</option>
-                {STATUS_OPTIONS.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
+                {STATUS_OPTIONS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
               </select>
-              <button
-                onClick={() => setTab('create')}
-                style={{ background: '#16a34a', color: 'white', fontWeight: 700, fontSize: '13px', padding: '11px 18px', borderRadius: '10px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
-              >
+              <button onClick={() => setTab('create')} style={{ background: '#16a34a', color: 'white', fontWeight: 700, fontSize: '13px', padding: '11px 16px', borderRadius: '10px', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                 <Plus size={16} /> New Order
               </button>
             </div>
 
-            {/* Table */}
-            <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+            {/* Desktop Table */}
+            <div className="desktop-table" style={{ background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9', overflow: 'hidden' }}>
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ background: '#f8fafc' }}>
-                      {['Tracking #', 'Sender', 'Receiver', 'Route', 'Service', 'Status', 'Est. Delivery', 'Action'].map((h) => (
-                        <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
+                      {['Tracking #', 'Sender', 'Receiver', 'Route', 'Service', 'Status', 'Delivery', 'Action'].map((h) => (
+                        <th key={h} style={{ padding: '12px 14px', textAlign: 'left', fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
                       <tr><td colSpan={8} style={{ padding: '48px', textAlign: 'center' }}>
-                        <div style={{ width: '32px', height: '32px', border: '3px solid #f1f5f9', borderTop: '3px solid #16a34a', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
+                        <div style={{ width: '28px', height: '28px', border: '3px solid #f1f5f9', borderTop: '3px solid #16a34a', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
                       </td></tr>
                     ) : filtered.length === 0 ? (
-                      <tr><td colSpan={8} style={{ padding: '48px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>No shipments found.</td></tr>
+                      <tr><td colSpan={8} style={{ padding: '48px', textAlign: 'center', color: '#94a3b8' }}>No shipments found.</td></tr>
                     ) : filtered.map((s) => {
                       const st = getStatusStyle(s.status)
                       return (
-                        <tr key={s.id} className="table-row" style={{ borderTop: '1px solid #f1f5f9' }}>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>{s.tracking_number}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', color: '#374151' }}>{s.sender_name}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '13px', color: '#374151' }}>{s.receiver_name}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '12px', color: '#64748b', whiteSpace: 'nowrap' }}>{s.origin_city} → {s.destination_city}</td>
-                          <td style={{ padding: '14px 16px', fontSize: '12px', color: '#64748b', textTransform: 'capitalize' }}>{s.service_type}</td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <span style={{ background: st.bg, color: st.color, fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px', whiteSpace: 'nowrap' }}>
+                        <tr key={s.id} style={{ borderTop: '1px solid #f1f5f9' }}>
+                          <td style={{ padding: '13px 14px', fontSize: '13px', fontWeight: 700, color: '#0f172a', whiteSpace: 'nowrap' }}>{s.tracking_number}</td>
+                          <td style={{ padding: '13px 14px', fontSize: '13px', color: '#374151' }}>{s.sender_name}</td>
+                          <td style={{ padding: '13px 14px', fontSize: '13px', color: '#374151' }}>{s.receiver_name}</td>
+                          <td style={{ padding: '13px 14px', fontSize: '12px', color: '#64748b', whiteSpace: 'nowrap' }}>{s.origin_city} → {s.destination_city}</td>
+                          <td style={{ padding: '13px 14px', fontSize: '12px', color: '#64748b', textTransform: 'capitalize' }}>{s.service_type}</td>
+                          <td style={{ padding: '13px 14px' }}>
+                            <span style={{ background: st.bg, color: st.color, fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '999px', whiteSpace: 'nowrap' }}>
                               {STATUS_OPTIONS.find((o) => o.value === s.status)?.label}
                             </span>
                           </td>
-                          <td style={{ padding: '14px 16px', fontSize: '12px', color: '#94a3b8', whiteSpace: 'nowrap' }}>
-                            {s.estimated_delivery ? new Date(s.estimated_delivery).toLocaleDateString() : 'N/A'}
-                          </td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <div style={{ display: 'flex', gap: '6px' }}>
-                              <button
-                                onClick={() => openDetail(s)}
-                                className="action-btn"
-                                style={{ background: '#f1f5f9', color: '#374151', border: 'none', padding: '7px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', transition: 'all 0.2s', whiteSpace: 'nowrap' }}
-                              >
-                                <Edit size={13} /> Update
+                          <td style={{ padding: '13px 14px', fontSize: '12px', color: '#94a3b8', whiteSpace: 'nowrap' }}>{s.estimated_delivery ? new Date(s.estimated_delivery).toLocaleDateString() : 'N/A'}</td>
+                          <td style={{ padding: '13px 14px' }}>
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                              <button onClick={() => openDetail(s)} className="action-btn"
+                                style={{ background: '#f1f5f9', color: '#374151', border: 'none', padding: '6px 10px', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', transition: 'all 0.2s', whiteSpace: 'nowrap' }}>
+                                <Edit size={12} /> Update
                               </button>
-                              <button
-                                onClick={() => downloadReceipt(s)}
-                                style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '7px 10px', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap' }}
-                              >
-                                <Download size={13} /> Receipt
+                              <button onClick={() => downloadReceipt(s)}
+                                style={{ background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '6px 8px', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px', whiteSpace: 'nowrap' }}>
+                                <Download size={12} /> Receipt
                               </button>
                             </div>
                           </td>
@@ -674,66 +620,104 @@ export default function AdminPage() {
                 </table>
               </div>
             </div>
+
+            {/* Mobile Cards */}
+            <div className="mobile-cards" style={{ flexDirection: 'column', gap: '10px' }}>
+              {loading && (
+                <div style={{ padding: '40px', textAlign: 'center' }}>
+                  <div style={{ width: '28px', height: '28px', border: '3px solid #f1f5f9', borderTop: '3px solid #16a34a', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
+                </div>
+              )}
+              {!loading && filtered.length === 0 && (
+                <div style={{ padding: '40px', textAlign: 'center', color: '#94a3b8', background: 'white', borderRadius: '16px', border: '1px solid #f1f5f9' }}>No shipments found.</div>
+              )}
+              {!loading && filtered.map((s) => {
+                const st = getStatusStyle(s.status)
+                return (
+                  <div key={s.id} className="ship-card" style={{ background: 'white', borderRadius: '16px', padding: '16px', border: '1px solid #f1f5f9', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '14px', fontWeight: 800, color: '#0f172a' }}>{s.tracking_number}</span>
+                      <span style={{ background: st.bg, color: st.color, fontSize: '10px', fontWeight: 700, padding: '4px 10px', borderRadius: '999px' }}>
+                        {STATUS_OPTIONS.find((o) => o.value === s.status)?.label}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#374151', marginBottom: '6px' }}>
+                      <span style={{ fontWeight: 600 }}>{s.sender_name}</span>
+                      <span style={{ color: '#94a3b8', margin: '0 6px' }}>→</span>
+                      <span style={{ fontWeight: 600 }}>{s.receiver_name}</span>
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '12px' }}>
+                      {s.origin_city}, {s.origin_country} → {s.destination_city}, {s.destination_country}
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button onClick={() => openDetail(s)}
+                        style={{ flex: 1, background: '#16a34a', color: 'white', border: 'none', padding: '9px', borderRadius: '9px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                        <Edit size={14} /> Update
+                      </button>
+                      <button onClick={() => downloadReceipt(s)}
+                        style={{ flex: 1, background: '#f0fdf4', color: '#16a34a', border: '1px solid #bbf7d0', padding: '9px', borderRadius: '9px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                        <Download size={14} /> Receipt
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )}
 
-        {/* CREATE ORDER TAB */}
+        {/* CREATE ORDER */}
         {tab === 'create' && (
           <div>
-            <div style={{ marginBottom: '24px' }}>
-              <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>Create New Order</h1>
-              <p style={{ fontSize: '14px', color: '#64748b', margin: 0 }}>Manually create a shipment order</p>
+            <div style={{ marginBottom: '20px' }}>
+              <h1 className="page-title" style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a', margin: '0 0 4px 0' }}>Create New Order</h1>
+              <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>Manually create a shipment order</p>
             </div>
 
             {createSuccess ? (
-              <div style={{ background: 'white', borderRadius: '20px', padding: '48px', textAlign: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
-                <div style={{ width: '72px', height: '72px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', animation: 'success-pop 0.4s ease' }}>
-                  <CheckCircle size={36} color="#16a34a" />
+              <div style={{ background: 'white', borderRadius: '20px', padding: '40px 24px', textAlign: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
+                <div style={{ width: '68px', height: '68px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', animation: 'success-pop 0.4s ease' }}>
+                  <CheckCircle size={34} color="#16a34a" />
                 </div>
-                <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', margin: '0 0 8px 0' }}>Order Created!</h2>
-                <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 24px 0' }}>Tracking number generated successfully</p>
-                <div style={{ background: 'linear-gradient(135deg,#052e16,#14532d)', borderRadius: '16px', padding: '24px', marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0f172a', margin: '0 0 8px 0' }}>Order Created!</h2>
+                <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 20px 0' }}>Tracking number generated successfully</p>
+                <div style={{ background: 'linear-gradient(135deg,#052e16,#14532d)', borderRadius: '14px', padding: '20px', marginBottom: '20px' }}>
                   <p style={{ fontSize: '11px', color: 'rgba(187,247,208,0.7)', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 6px 0' }}>Tracking Number</p>
-                  <p style={{ fontSize: '28px', fontWeight: 900, color: 'white', margin: 0, letterSpacing: '0.06em' }}>{createSuccess}</p>
+                  <p style={{ fontSize: '24px', fontWeight: 900, color: 'white', margin: 0, letterSpacing: '0.06em' }}>{createSuccess}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                  <button onClick={() => { setCreateSuccess(''); setTab('shipments') }} style={{ background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px 24px', borderRadius: '12px', border: 'none', cursor: 'pointer', fontSize: '14px' }}>
-                    View All Shipments
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <button onClick={() => { setCreateSuccess(''); setTab('shipments') }} style={{ flex: 1, background: '#16a34a', color: 'white', fontWeight: 700, padding: '12px', borderRadius: '10px', border: 'none', cursor: 'pointer', fontSize: '14px', minWidth: '140px' }}>
+                    View Shipments
                   </button>
-                  <button onClick={() => setCreateSuccess('')} style={{ background: '#f8fafc', color: '#374151', fontWeight: 600, padding: '12px 24px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer', fontSize: '14px' }}>
+                  <button onClick={() => setCreateSuccess('')} style={{ flex: 1, background: '#f8fafc', color: '#374151', fontWeight: 600, padding: '12px', borderRadius: '10px', border: '1px solid #e2e8f0', cursor: 'pointer', fontSize: '14px', minWidth: '140px' }}>
                     Create Another
                   </button>
                 </div>
               </div>
             ) : (
-              <div style={{ background: 'white', borderRadius: '20px', padding: '32px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+              <div style={{ background: 'white', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
                   {/* Sender */}
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
                       <div style={{ background: '#dcfce7', padding: '8px', borderRadius: '10px' }}>
-                        <User size={16} color="#16a34a" />
+                        <User size={15} color="#16a34a" />
                       </div>
-                      <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Sender Information</h3>
+                      <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Sender Information</h3>
                     </div>
-                    <div className="create-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                    <div className="create-grid" style={{ display: 'grid', gap: '12px' }}>
                       {[
                         { label: 'Full Name *', field: 'sender_name', placeholder: 'John Smith' },
                         { label: 'Email', field: 'sender_email', placeholder: 'john@email.com' },
-                        { label: 'Phone', field: 'sender_phone', placeholder: '+1 706 452 1539' },
+                        { label: 'Phone', field: 'sender_phone', placeholder: '+1 800 000 0000' },
                         { label: 'Address', field: 'sender_address', placeholder: '123 Main St' },
-                        { label: 'Origin City *', field: 'origin_city', placeholder: 'Lagos' },
-                        { label: 'Origin Country *', field: 'origin_country', placeholder: 'Nigeria' },
+                        { label: 'Origin City *', field: 'origin_city', placeholder: 'New York' },
+                        { label: 'Origin Country *', field: 'origin_country', placeholder: 'United States' },
                       ].map((item) => (
                         <div key={item.field}>
                           <label style={labelStyle}>{item.label}</label>
-                          <input
-                            style={inputStyle}
-                            placeholder={item.placeholder}
-                            value={(createForm as any)[item.field]}
-                            onChange={(e) => setCreateForm((p) => ({ ...p, [item.field]: e.target.value }))}
-                          />
+                          <input style={inputStyle} placeholder={item.placeholder} value={(createForm as any)[item.field]} onChange={(e) => setCreateForm((p) => ({ ...p, [item.field]: e.target.value }))} />
                         </div>
                       ))}
                     </div>
@@ -741,29 +725,24 @@ export default function AdminPage() {
 
                   {/* Receiver */}
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
                       <div style={{ background: '#dbeafe', padding: '8px', borderRadius: '10px' }}>
-                        <MapPin size={16} color="#2563eb" />
+                        <MapPin size={15} color="#2563eb" />
                       </div>
-                      <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Receiver Information</h3>
+                      <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Receiver Information</h3>
                     </div>
-                    <div className="create-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                    <div className="create-grid" style={{ display: 'grid', gap: '12px' }}>
                       {[
                         { label: 'Full Name *', field: 'receiver_name', placeholder: 'Jane Doe' },
                         { label: 'Email', field: 'receiver_email', placeholder: 'jane@email.com' },
-                        { label: 'Phone', field: 'receiver_phone', placeholder: '+234 800 000 0001' },
+                        { label: 'Phone', field: 'receiver_phone', placeholder: '+1 800 000 0001' },
                         { label: 'Address', field: 'receiver_address', placeholder: '456 Delivery Rd' },
-                        { label: 'Destination City *', field: 'destination_city', placeholder: 'Abuja' },
-                        { label: 'Destination Country *', field: 'destination_country', placeholder: 'Nigeria' },
+                        { label: 'Destination City *', field: 'destination_city', placeholder: 'Los Angeles' },
+                        { label: 'Destination Country *', field: 'destination_country', placeholder: 'United States' },
                       ].map((item) => (
                         <div key={item.field}>
                           <label style={labelStyle}>{item.label}</label>
-                          <input
-                            style={inputStyle}
-                            placeholder={item.placeholder}
-                            value={(createForm as any)[item.field]}
-                            onChange={(e) => setCreateForm((p) => ({ ...p, [item.field]: e.target.value }))}
-                          />
+                          <input style={inputStyle} placeholder={item.placeholder} value={(createForm as any)[item.field]} onChange={(e) => setCreateForm((p) => ({ ...p, [item.field]: e.target.value }))} />
                         </div>
                       ))}
                     </div>
@@ -771,13 +750,13 @@ export default function AdminPage() {
 
                   {/* Package */}
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
                       <div style={{ background: '#ffedd5', padding: '8px', borderRadius: '10px' }}>
-                        <Package size={16} color="#ea580c" />
+                        <Package size={15} color="#ea580c" />
                       </div>
-                      <h3 style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Package Details</h3>
+                      <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', margin: 0 }}>Package Details</h3>
                     </div>
-                    <div className="create-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
+                    <div className="create-grid" style={{ display: 'grid', gap: '12px' }}>
                       <div>
                         <label style={labelStyle}>Weight (kg)</label>
                         <input style={inputStyle} type="number" placeholder="2.5" value={createForm.package_weight} onChange={(e) => setCreateForm((p) => ({ ...p, package_weight: e.target.value }))} />
@@ -805,15 +784,12 @@ export default function AdminPage() {
                   </div>
                 )}
 
-                <div style={{ display: 'flex', gap: '12px', marginTop: '28px' }}>
-                  <button onClick={() => setTab('shipments')} style={{ flex: 1, background: '#f8fafc', color: '#374151', fontWeight: 600, fontSize: '14px', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer' }}>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '24px' }}>
+                  <button onClick={() => setTab('shipments')} style={{ flex: 1, background: '#f8fafc', color: '#374151', fontWeight: 600, fontSize: '14px', padding: '13px', borderRadius: '12px', border: '1px solid #e2e8f0', cursor: 'pointer' }}>
                     Cancel
                   </button>
-                  <button
-                    onClick={createOrder}
-                    disabled={createLoading}
-                    style={{ flex: 2, background: createLoading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '12px', border: 'none', cursor: createLoading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                  >
+                  <button onClick={createOrder} disabled={createLoading}
+                    style={{ flex: 2, background: createLoading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '13px', borderRadius: '12px', border: 'none', cursor: createLoading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                     {createLoading ? (
                       <><div style={{ width: '16px', height: '16px', border: '3px solid rgba(255,255,255,0.3)', borderTop: '3px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> Creating...</>
                     ) : (
@@ -829,36 +805,31 @@ export default function AdminPage() {
 
       {/* DETAIL MODAL */}
       {showDetail && selectedShipment && (
-        <div
-          onClick={(e) => { if (e.target === e.currentTarget) setShowDetail(false) }}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
-        >
-          <div style={{ background: 'white', borderRadius: '20px', width: '100%', maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 40px 80px rgba(0,0,0,0.3)' }}>
+        <div className="modal-wrap" onClick={(e) => { if (e.target === e.currentTarget) setShowDetail(false) }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div className="modal-inner" style={{ background: 'white', borderRadius: '20px', width: '100%', maxWidth: '560px', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 40px 80px rgba(0,0,0,0.3)' }}>
 
-            {/* Header */}
-            <div style={{ padding: '24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, background: 'white', zIndex: 1 }}>
               <div>
-                <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 4px 0' }}>Update Shipment</p>
-                <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#0f172a', margin: 0 }}>{selectedShipment.tracking_number}</h2>
+                <p style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 3px 0' }}>Update Shipment</p>
+                <h2 style={{ fontSize: '18px', fontWeight: 900, color: '#0f172a', margin: 0 }}>{selectedShipment.tracking_number}</h2>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  onClick={() => downloadReceipt(selectedShipment)}
-                  style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', borderRadius: '10px', padding: '8px 14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600 }}
-                >
-                  <Download size={15} /> Receipt
+                <button onClick={() => downloadReceipt(selectedShipment)}
+                  style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', color: '#16a34a', borderRadius: '10px', padding: '7px 12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', fontWeight: 600 }}>
+                  <Download size={14} /> Receipt
                 </button>
-                <button onClick={() => setShowDetail(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '36px', height: '36px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <X size={18} color="#64748b" />
+                <button onClick={() => setShowDetail(false)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '34px', height: '34px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <X size={16} color="#64748b" />
                 </button>
               </div>
             </div>
 
-            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
-              {/* Shipment Info */}
-              <div style={{ background: '#f8fafc', borderRadius: '14px', padding: '18px', border: '1px solid #f1f5f9' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+              {/* Info */}
+              <div style={{ background: '#f8fafc', borderRadius: '14px', padding: '16px', border: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   {[
                     { label: 'From', value: `${selectedShipment.sender_name}\n${selectedShipment.origin_city}, ${selectedShipment.origin_country}` },
                     { label: 'To', value: `${selectedShipment.receiver_name}\n${selectedShipment.destination_city}, ${selectedShipment.destination_country}` },
@@ -866,38 +837,27 @@ export default function AdminPage() {
                     { label: 'Weight', value: selectedShipment.package_weight ? selectedShipment.package_weight + ' kg' : 'N/A' },
                   ].map((item) => (
                     <div key={item.label}>
-                      <p style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 3px 0' }}>{item.label}</p>
+                      <p style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', margin: '0 0 2px 0' }}>{item.label}</p>
                       {item.value.split('\n').map((line, i) => (
-                        <p key={i} style={{ fontSize: '13px', fontWeight: i === 0 ? 700 : 500, color: i === 0 ? '#0f172a' : '#64748b', margin: '0 0 1px 0' }}>{line}</p>
+                        <p key={i} style={{ fontSize: '12px', fontWeight: i === 0 ? 700 : 500, color: i === 0 ? '#0f172a' : '#64748b', margin: '0 0 1px 0' }}>{line}</p>
                       ))}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Update Status */}
+              {/* Status */}
               <div>
                 <label style={{ ...labelStyle, fontSize: '13px', marginBottom: '8px' }}>Update Status</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
                   {STATUS_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => {
-                        setNewStatus(option.value)
-                        setCustomNote(STATUS_DESCRIPTIONS[option.value])
-                      }}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '12px',
-                        padding: '12px 16px', borderRadius: '12px',
-                        border: newStatus === option.value ? `2px solid ${option.color}` : '2px solid #f1f5f9',
-                        background: newStatus === option.value ? option.bg : 'white',
-                        cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                      }}
-                    >
-                      <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: option.color, flexShrink: 0 }} />
-                      <span style={{ fontSize: '13px', fontWeight: 700, color: option.color }}>{option.label}</span>
+                    <button key={option.value}
+                      onClick={() => { setNewStatus(option.value); setCustomNote(STATUS_DESCRIPTIONS[option.value]) }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 14px', borderRadius: '10px', border: newStatus === option.value ? `2px solid ${option.color}` : '2px solid #f1f5f9', background: newStatus === option.value ? option.bg : 'white', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                      <div style={{ width: '9px', height: '9px', borderRadius: '50%', background: option.color, flexShrink: 0 }} />
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: option.color, flex: 1 }}>{option.label}</span>
                       {selectedShipment.status === option.value && (
-                        <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#94a3b8', fontWeight: 500 }}>Current</span>
+                        <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 500 }}>Current</span>
                       )}
                     </button>
                   ))}
@@ -907,36 +867,23 @@ export default function AdminPage() {
               {/* Location */}
               <div>
                 <label style={labelStyle}>Current Location</label>
-                <input
-                  style={inputStyle}
-                  placeholder="e.g. Lagos, Nigeria"
-                  value={customLocation}
-                  onChange={(e) => setCustomLocation(e.target.value)}
-                />
+                <input style={inputStyle} placeholder="e.g. New York, United States" value={customLocation} onChange={(e) => setCustomLocation(e.target.value)} />
               </div>
 
               {/* Note */}
               <div>
                 <label style={labelStyle}>Tracking Note</label>
-                <input
-                  style={inputStyle}
-                  placeholder="e.g. Package arrived at sorting facility"
-                  value={customNote}
-                  onChange={(e) => setCustomNote(e.target.value)}
-                />
+                <input style={inputStyle} placeholder="e.g. Package arrived at sorting facility" value={customNote} onChange={(e) => setCustomNote(e.target.value)} />
               </div>
 
               {updateSuccess && (
                 <div style={{ background: '#dcfce7', color: '#16a34a', fontSize: '13px', padding: '12px 16px', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600 }}>
-                  <CheckCircle size={16} /> Status updated successfully! Tracking history updated.
+                  <CheckCircle size={16} /> Status and tracking history updated!
                 </div>
               )}
 
-              <button
-                onClick={updateStatus}
-                disabled={updateLoading}
-                style={{ background: updateLoading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '15px', borderRadius: '12px', border: 'none', cursor: updateLoading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', boxShadow: updateLoading ? 'none' : '0 4px 16px rgba(22,163,74,0.3)' }}
-              >
+              <button onClick={updateStatus} disabled={updateLoading}
+                style={{ background: updateLoading ? '#94a3b8' : 'linear-gradient(135deg,#16a34a,#15803d)', color: 'white', fontWeight: 700, fontSize: '14px', padding: '14px', borderRadius: '12px', border: 'none', cursor: updateLoading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                 {updateLoading ? (
                   <><div style={{ width: '16px', height: '16px', border: '3px solid rgba(255,255,255,0.3)', borderTop: '3px solid white', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} /> Updating...</>
                 ) : (
